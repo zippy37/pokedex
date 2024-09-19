@@ -3,7 +3,7 @@ var pokedex = {}; // {1 : {"name" : "bulbasaur", "img" : url, "type" : ["grass, 
 pokedexRegex = /[\f\n]+/igm;
 
 window.onload = async () => {
-    // getPokemon(1025);
+   // getPokemon(265);
     for (let i = 1; i <= pokemonCount; i++) {
         await getPokemon(i);
 
@@ -33,16 +33,17 @@ const getPokemon = async num => {
     res = await fetch(pokemon["species"]["url"]);
     let pokemonDesc = await res.json();
 
-    // console.log(pokemonDesc);
+    // filter english dex entries only
 
-    if (pokemonDesc["flavor_text_entries"].length > 1) {
-        pokemonDesc = pokemonDesc["flavor_text_entries"][1]["flavor_text"]
+    for (let i = 0; i < pokemonDesc["flavor_text_entries"].length; i++) {
+        
+        if (pokemonDesc["flavor_text_entries"][i]["language"]["name"] == "en") {
+            englishDesc = pokemonDesc["flavor_text_entries"][i]["flavor_text"];
+            break;
+        }
     }
-    
-    else {
-        pokemonDesc = pokemonDesc["flavor_text_entries"][0]["flavor_text"]
-    }
-    pokedex[num] = {"name" : pokemonName, "img" : pokemonImg, "types" : pokemonType, "desc" : pokemonDesc}
+
+    pokedex[num] = {"name" : pokemonName, "img" : pokemonImg, "types" : pokemonType, "desc" : englishDesc}
 }
 
 function updatePokemon() {
